@@ -99,3 +99,6 @@ data/transcripts/
 *.pem
 *.crt
 config/secrets/
+node_modules
+build
+.env
