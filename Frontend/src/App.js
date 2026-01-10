@@ -21,7 +21,7 @@ function App() {
     setError(null);
 
     try {
-      const response = await axios.post('http://localhost:8000/process', {
+      const response = await axios.post('https://seektube.onrender.com/process', {
         url: youtubeUrl.trim()
       });
       
@@ -58,7 +58,7 @@ function App() {
     setAnswer(null);
 
     try {
-      const response = await axios.post('http://localhost:8000/ask', {
+      const response = await axios.post('https://seektube.onrender.com/ask', {
         question: question.trim(),
         video_id: videoId
       });

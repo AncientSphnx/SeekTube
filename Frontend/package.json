@@ -1,5 +1,5 @@
 {
-  "name": "youtube-knowledge-frontend",
+  "name": "seektube-frontend",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
@@ -36,5 +36,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:8000"
+  "homepage": "https://seektube.vercel.app"
 }
