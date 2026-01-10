@@ -13,7 +13,9 @@ function App() {
   const [error, setError] = useState(null);
   const [processed, setProcessed] = useState(false);
 
-  const handleProcessVideo = async (e) => {
+  const API_URL = process.env.REACT_APP_API_URL || 'https://seektube.onrender.com';
+
+const handleProcessVideo = async (e) => {
     e.preventDefault();
     if (!youtubeUrl.trim()) return;
 
@@ -21,7 +23,7 @@ function App() {
     setError(null);
 
     try {
-      const response = await axios.post('https://seektube.onrender.com/process', {
+      const response = await axios.post(`${API_URL}/process`, {
         url: youtubeUrl.trim()
       });
       
@@ -58,7 +60,7 @@ function App() {
     setAnswer(null);
 
     try {
-      const response = await axios.post('https://seektube.onrender.com/ask', {
+      const response = await axios.post(`${API_URL}/ask`, {
         question: question.trim(),
         video_id: videoId
       });

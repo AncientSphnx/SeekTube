@@ -1,8 +1,12 @@
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
-from langchain_community.llms import Ollama
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 # -----------------------------
 # PROMPT (Phase 5 – Improved)
@@ -12,6 +16,7 @@ You are answering a question using transcript excerpts from a YouTube video.
 
 STRICT RULES (DO NOT VIOLATE):
 - Answer ONLY using the provided transcript context.
+- Do NOT infer, assume, or guess.
 - Do NOT explain rules or reasoning.
 - Do NOT add commentary.
 - Output ONLY the final answer sentence.
@@ -88,10 +93,22 @@ def extract_ranked_timestamps(source_documents, max_results=3):
 # QA Chain Builder
 # -----------------------------
 def build_qa_chain(retriever):
-    llm = Ollama(
-        model="phi",
-        temperature=0
-    )
+    # Use Gemini API if available, fallback to Ollama
+    google_api_key = os.getenv("GOOGLE_API_KEY")
+    
+    if google_api_key:
+        llm = ChatGoogleGenerativeAI(
+            model="gemini-pro",
+            temperature=0,
+            google_api_key=google_api_key
+        )
+    else:
+        # Fallback to Ollama (local)
+        from langchain_community.llms import Ollama
+        llm = Ollama(
+            model="phi",
+            temperature=0
+        )
 
     prompt = PromptTemplate(
         input_variables=["context", "question"],
