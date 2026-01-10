@@ -80,11 +80,6 @@ const handleProcessVideo = async (e) => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const extractVideoTitle = (url) => {
-    const videoId = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
-    return videoId ? `Video ${videoId[1]}` : 'YouTube Video';
-  };
-
   return (
     <div className="app">
       <header className="header">
