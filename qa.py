@@ -3,29 +3,36 @@ from langchain_community.vectorstores import Chroma
 from langchain_community.llms import Ollama
 from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
-from dotenv import load_dotenv
-load_dotenv()
 
-
+# -----------------------------
+# PROMPT (Phase 5 – Improved)
+# -----------------------------
 PROMPT_TEMPLATE = """
-You are an assistant answering questions about a YouTube video.
+You are answering a question using transcript excerpts from a YouTube video.
 
-You must follow these rules strictly:
-1. Answer ONLY using the provided transcript context.
-2. If the answer is not present, say "The video does not mention this."
-3. Be concise and factual.
-4. Do NOT add external knowledge.
+STRICT RULES (DO NOT VIOLATE):
+- Use ONLY information explicitly stated in the transcript.
+- Do NOT infer, assume, or guess.
+- Do NOT explain rules or reasoning.
+- Do NOT add commentary.
+- Output ONLY the final answer sentence.
 
-Context:
+If the transcript does not explicitly state the answer, output EXACTLY:
+"The video does not mention this."
+
+Transcript excerpts:
 {context}
 
 Question:
 {question}
 
-Answer:
+Final Answer (one sentence only):
 """
 
 
+# -----------------------------
+# Vector Store Loader
+# -----------------------------
 def load_vectorstore(persist_dir="data/vectordb"):
     embedding = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2"
@@ -35,16 +42,54 @@ def load_vectorstore(persist_dir="data/vectordb"):
         embedding_function=embedding
     )
 
+# -----------------------------
+# Retriever
+# -----------------------------
 def get_retriever(vectordb, k=4):
     return vectordb.as_retriever(
         search_type="similarity",
         search_kwargs={"k": k}
     )
 
+# -----------------------------
+# Context Compression
+# -----------------------------
+def build_context(source_documents):
+    blocks = []
+    for doc in source_documents:
+        clean_text = doc.page_content.strip()
+        blocks.append(f"- {clean_text}")
+    return "\n".join(blocks)
+
+# -----------------------------
+# Timestamp Ranking
+# -----------------------------
+def extract_ranked_timestamps(source_documents, max_results=3):
+    seen = set()
+    timestamps = []
+
+    for doc in source_documents:
+        start = int(doc.metadata["start_time"])
+        key = (doc.metadata["video_id"], start)
+
+        if key not in seen:
+            seen.add(key)
+            timestamps.append({
+                "video_id": doc.metadata["video_id"],
+                "start_time": start,
+                "end_time": int(doc.metadata["end_time"])
+            })
+
+    timestamps.sort(key=lambda x: x["start_time"])
+    return timestamps[:max_results]
+
+# -----------------------------
+# QA Chain Builder
+# -----------------------------
 def build_qa_chain(retriever):
     llm = Ollama(
-        temperature=0,
-        model="phi"
+        model="phi",
+        temperature=0
     )
 
     prompt = PromptTemplate(
@@ -59,36 +104,46 @@ def build_qa_chain(retriever):
         chain_type_kwargs={"prompt": prompt}
     )
 
+# -----------------------------
+# Main QA Function (API-Ready)
+# -----------------------------
 def ask_question(question):
     vectordb = load_vectorstore()
     retriever = get_retriever(vectordb)
     qa_chain = build_qa_chain(retriever)
 
-    result = qa_chain(question)
+    # Correct invocation (no deprecation warning)
+    result = qa_chain.invoke({"query": question})
 
     answer = result["result"]
-    sources = result["source_documents"]
+    source_docs = result["source_documents"]
 
-    timestamps = []
-    for doc in sources:
-        timestamps.append({
-            "video_id": doc.metadata["video_id"],
-            "start_time": doc.metadata["start_time"],
-            "end_time": doc.metadata["end_time"]
-        })
+    timestamps = extract_ranked_timestamps(source_docs)
 
-    return answer, timestamps
+    response = {
+        "answer": answer,
+        "timestamps": [
+            {
+                "video_id": t["video_id"],
+                "start_time": t["start_time"],
+                "url": f"https://www.youtube.com/watch?v={t['video_id']}&t={t['start_time']}s"
+            }
+            for t in timestamps
+        ]
+    }
 
+    return response
 
+# -----------------------------
+# CLI Test
+# -----------------------------
 if __name__ == "__main__":
-    question = "who is the narrator?"
-    answer, timestamps = ask_question(question)
+    question = "Who is the narrator?"
+    response = ask_question(question)
 
     print("\nAnswer:")
-    print(answer)
+    print(response["answer"])
 
     print("\nTimestamps:")
-    for t in timestamps:
-        print(
-            f"https://www.youtube.com/watch?v={t['video_id']}&t={int(t['start_time'])}s"
-        )
+    for t in response["timestamps"]:
+        print(t["url"])
