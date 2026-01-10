@@ -2,7 +2,6 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
-from langchain_community.chains import RetrievalQA
 from dotenv import load_dotenv
 import os
 
@@ -115,12 +114,17 @@ def build_qa_chain(retriever):
         template=PROMPT_TEMPLATE
     )
 
-    return RetrievalQA.from_chain_type(
-        llm=llm,
-        retriever=retriever,
-        return_source_documents=True,
-        chain_type_kwargs={"prompt": prompt}
+    # Use LCEL syntax instead of deprecated RetrievalQA
+    from langchain_core.runnables import RunnablePassthrough
+    
+    chain = (
+        {"context": retriever | (lambda docs: "\n".join(doc.page_content for doc in docs)), 
+         "question": RunnablePassthrough()}
+        | prompt
+        | llm
     )
+    
+    return chain
 
 # -----------------------------
 # Main QA Function (API-Ready)
@@ -131,16 +135,16 @@ def ask_question(question, video_id):
     retriever = get_retriever(vectordb)
     qa_chain = build_qa_chain(retriever)
 
-    # Correct invocation (no deprecation warning)
-    result = qa_chain.invoke({"query": question})
-
-    answer = result["result"]
-    source_docs = result["source_documents"]
-
-    timestamps = extract_ranked_timestamps(source_docs)
+    # Get relevant documents first
+    docs = retriever.invoke(question)
+    
+    # Generate answer
+    answer = qa_chain.invoke(question)
+    
+    timestamps = extract_ranked_timestamps(docs)
 
     response = {
-        "answer": answer,
+        "answer": answer.content if hasattr(answer, 'content') else str(answer),
         "timestamps": [
             {
                 "video_id": t["video_id"],
