@@ -1,0 +1,332 @@
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background: #0a0a0a;
+  color: #e5e5e5;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+.app {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+}
+
+/* Header */
+.header {
+  text-align: center;
+  padding: 4rem 2rem 2rem;
+  background: radial-gradient(ellipse at top, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #00ffff 0%, #00ccff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #9ca3af;
+  font-weight: 400;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Main Content */
+.main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 2rem 4rem;
+}
+
+/* Question Card */
+.question-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  margin-bottom: 2rem;
+}
+
+.question-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  color: #6b7280;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.question-input {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: #e5e5e5;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.question-input::placeholder {
+  color: #6b7280;
+}
+
+.question-input:focus {
+  border-color: #00ffff;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.1);
+}
+
+.question-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ask-button {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #00ffff 0%, #00ccff 100%);
+  border: none;
+  border-radius: 12px;
+  color: #0a0a0a;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 20px rgba(0, 255, 255, 0.3);
+}
+
+.ask-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(0, 255, 255, 0.4);
+}
+
+.ask-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Results Section */
+.results-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.answer-card,
+.sources-card,
+.error-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.section-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #00ffff;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.answer-text {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #e5e5e5;
+}
+
+.not-found {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* Timestamps */
+.timestamps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.timestamp-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: #e5e5e5;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.timestamp-item:hover {
+  background: rgba(0, 255, 255, 0.1);
+  border-color: rgba(0, 255, 255, 0.3);
+  transform: translateX(4px);
+}
+
+.timestamp-item svg:first-child {
+  color: #00ffff;
+  flex-shrink: 0;
+}
+
+.time {
+  font-weight: 500;
+  color: #00ffff;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+}
+
+.timestamp-item svg:last-child {
+  color: #6b7280;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* Status Card */
+.status-card {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 16px;
+  padding: 1.5rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  margin-bottom: 2rem;
+}
+
+.status-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.status-content h3 {
+  color: #22c55e;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.status-content p {
+  color: #9ca3af;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.status-icon {
+  color: #22c55e;
+  flex-shrink: 0;
+}
+
+.reset-button {
+  margin-left: auto;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #e5e5e5;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reset-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Error State */
+.error-card {
+  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.error-card p {
+  color: #f87171;
+}
+
+/* Animations */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header {
+    padding: 3rem 1rem 1.5rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+  }
+  
+  .main {
+    padding: 0 1rem 3rem;
+  }
+  
+  .question-card,
+  .answer-card,
+  .sources-card,
+  .error-card {
+    padding: 1.5rem;
+  }
+  
+  .ask-button {
+    padding: 0.875rem 1.5rem;
+  }
+}
+
+/* Smooth transitions */
+* {
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
