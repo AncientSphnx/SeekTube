@@ -447,7 +447,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🔗 Links
 
-- **Live Demo**: [Coming Soon]
+- **Live Demo**: [https://seek-tube-omega.vercel.app/](https://seek-tube-omega.vercel.app/)
 - **Documentation**: [Wiki](https://github.com/AncientSphnx/SeekTube/wiki)
 - **Issues**: [GitHub Issues](https://github.com/AncientSphnx/SeekTube/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/AncientSphnx/SeekTube/discussions)
