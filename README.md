@@ -14,7 +14,7 @@ A modern, intelligent system that allows you to ask natural language questions a
 - ❓ **Ask questions** → Get accurate, timestamp-grounded answers
 - ⏱️ **Click timestamps** → Jump to exact moments in the video
 - 🧠 **RAG-powered** → No hallucinations, 100% based on actual video content
-- 🚀 **Local LLM** → Private, fast, no API costs
+- 🚀 **Google Gemini API** → Fast, accurate AI responses
 
 **Perfect for**: Students, researchers, content creators, anyone who wants to efficiently extract information from YouTube videos.
 
@@ -58,7 +58,7 @@ SeekTube/
 
 - Python 3.8+
 - Node.js 16+
-- Ollama (for local LLM) or HuggingFace API access
+- Google API Key (for Gemini AI)
 
 ### 1. Clone the Repository
 
@@ -77,7 +77,8 @@ pip install -r requirements.txt
 
 # Set up environment variables
 cp .env.example .env
-# Edit .env with your API keys
+# Edit .env with your Google API key
+GOOGLE_API_KEY=your_google_api_key_here
 
 # Start the backend server
 uvicorn app:app --reload --port 8000
@@ -291,8 +292,8 @@ Final Answer (one sentence only):
 - **YouTube Transcript API** - Video transcript extraction
 
 ### AI/ML
-- **Ollama** - Local LLM (phi model)
-- **HuggingFace** - Alternative cloud LLM
+- **Google Gemini** - Cloud-based LLM (gemini-pro model)
+- **HuggingFace** - Embeddings and alternative models
 - **Embeddings** - sentence-transformers/all-MiniLM-L6-v2
 
 ## 📡 API Documentation
@@ -356,22 +357,19 @@ Health check endpoint.
 ### Environment Variables (.env)
 
 ```bash
-# Optional: OpenAI API key (if using OpenAI instead of Ollama)
-OPENAI_API_KEY=your_openai_key_here
-
-# Optional: HuggingFace token (if using HuggingFace models)
-HUGGINGFACE_TOKEN=your_hf_token_here
+# Required: Google API Key for Gemini
+GOOGLE_API_KEY=your_google_api_key_here
 ```
 
-### LLM Options
+### LLM Configuration
 
-1. **Ollama (Recommended)** - Local, free, private
+**Google Gemini (Recommended)** - Fast, accurate, cloud-based
    ```bash
-   ollama pull phi
+   # Get your API key from: https://makersuite.google.com/app/apikey
+   export GOOGLE_API_KEY=your_api_key_here
    ```
 
-2. **HuggingFace** - Cloud-based, requires token
-3. **OpenAI** - Cloud-based, requires API key
+2. **Local Ollama** - Available as fallback (requires local setup)
 
 ## 🎨 Design Principles
 
@@ -426,7 +424,7 @@ cd backend
 - **Transcript Availability** - Only works with videos that have subtitles/captions
 - **Language Support** - Best performance with English content
 - **Video Length** - Very long videos may take longer to process
-- **Memory Usage** - Local LLM requires sufficient RAM
+- **API Key Required** - Google Gemini API key needed for AI responses
 
 ## 🤝 Contributing
 
@@ -445,7 +443,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **LangChain** - For the excellent AI orchestration framework
 - **ChromaDB** - For efficient vector storage
 - **YouTube Transcript API** - For transcript extraction
-- **Ollama** - For local LLM capabilities
+- **Google Gemini** - For powerful AI capabilities
 
 ## 🔗 Links
 
